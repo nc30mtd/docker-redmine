@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  redmine:
+    image: redmine:4.2.8
+    ports:
+      - 8888:3000
+    volumes:
+      - ./data/plugins:/usr/src/redmine/plugins
+      - ./data/themes:/usr/src/redmine/public/themes
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_PASSWORD: example
+      REDMINE_SECRET_KEY_BASE: supersecretkey
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: redmine
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
